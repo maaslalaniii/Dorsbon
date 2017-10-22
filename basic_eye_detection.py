@@ -1,6 +1,8 @@
 import numpy as np
 import cv2
 from matplotlib import pyplot as plt
+import time
+
 
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
@@ -49,7 +51,11 @@ def detect_and_draw(img, gray):
     cv2.imshow('frame', img)
 
 if __name__ == '__main__':
+    starttime = time.time()
     while(True):
+        if (time.time() - starttime > 100):
+            print("You have been working too long, take a break!")
+            starttime = time.time()
         ret, frame = cap.read()
         frame = cv2.resize(frame, (600, 350))
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
