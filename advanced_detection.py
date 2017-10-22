@@ -1,3 +1,5 @@
+import msvcrt as m
+
 import numpy as np
 import copy
 import cv2
@@ -55,16 +57,20 @@ def calibrate_position(img, gray):
 
 	cv2.imshow('frame', img)
 	
-def calibration_loop():
-	starttime = time.time()
-	while (time.time() - starttime < 10):
-		ret, frame = cap.read()
-		frame = cv2.resize(frame, (600, 350))
-		gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-		calibrate_position(frame, gray)
-	proper_posture_position = sum(initial_position) / len(initial_position)
-	print(proper_posture_position)
-	print ("calibrated")
+# def calibration_loop():
+	# print ("Calibration: Please sit up straight and remain still for 10 seconds.")
+	# time.sleep(3)
+	# starttime = time.time()
+	# while (time.time() - starttime < 10):
+		# ret, frame = cap.read()
+		# frame = cv2.resize(frame, (600, 350))
+		# gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+		# calibrate_position(frame, gray)
+		# if cv2.waitKey(1) & 0xFF == ord('q'):
+			# quit()
+	# proper_posture_position = sum(initial_position) / len(initial_position)
+	# print(proper_posture_position)
+	# print ("calibrated")
 	
 def detect_and_draw(img, gray):
     
@@ -89,8 +95,8 @@ def detect_and_draw(img, gray):
 			eh = int(eh/3)
             
 			print(ey)
-			print (ey > proper_posture_position + 5)
-			if ey > proper_posture_position + 5:
+
+			if ey > (proper_posture_position*1.05):
 				print("you are slouching")
 			else: 
 				print("you are not slouching")
@@ -112,13 +118,20 @@ def countdown(t):
 		t -= 1
 	print ("Break is over.")
 	
-def backToWork():
-	print ("Please re-calibrate your posture.")
-	B = tkinter.Button(top, text ="Calibrate", command = calibration_loop)
-	B.pack()
-
 if __name__ == '__main__':
-	calibration_loop()
+	print ("Calibration: Please sit up straight and remain still for 10 seconds.")
+	time.sleep(3)
+	starttime = time.time()
+	while (time.time() - starttime < 10):
+		ret, frame = cap.read()
+		frame = cv2.resize(frame, (600, 350))
+		gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+		calibrate_position(frame, gray)
+		if cv2.waitKey(1) & 0xFF == ord('q'):
+			quit()
+	proper_posture_position = sum(initial_position) / len(initial_position)
+	print(proper_posture_position)
+	print ("calibrated")
 	
 	while(True):
 		starttime = time.time()
@@ -132,8 +145,25 @@ if __name__ == '__main__':
 				quit()
 		print ("You have been working for one hour. Take a break!")
 		countdown(15)
-		backToWork()
+		
+		print ("Please press any key to re-calibrate your posture.")
+		m.getch()
+		print ("Calibration: Please sit up straight and remain still for 10 seconds.")
+		time.sleep(3)
+		starttime = time.time()
+		while (time.time() - starttime < 10):
+			ret, frame = cap.read()
+			frame = cv2.resize(frame, (600, 350))
+			gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+			calibrate_position(frame, gray)
+			if cv2.waitKey(1) & 0xFF == ord('q'):
+				quit()
+		proper_posture_position = sum(initial_position) / len(initial_position)
+		print(proper_posture_position)
+		print ("calibrated")
 		if cv2.waitKey(1) & 0xFF == ord('q'):
 			quit()
     # When everything done, release the capture
 	cv2.destroyAllWindows()
+	
+#http://www.pygaze.org/
