@@ -2,18 +2,19 @@ import numpy as np
 import cv2
 from matplotlib import pyplot as plt
 
-face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_default.xml')
-eye_cascade = cv2.CascadeClassifier('haarcascades2/haarcascade_eye.xml')
+face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
 
 cap = cv2.VideoCapture(0)
+
+eye_position_values = [0,0,0,0,0,0,0,0,0,0,0]
+proper_posture_position = 35
 
 def detect_and_draw(img, gray):
     
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+    # cv2.line(img, (0, 175), (600, 175), (0,255,0), 1)                
 
-    eye_position_values = [0,0,0,0,0,0,0,0,0,0,0]
-    eye_average_position = 35
-    proper_posture_position = 35
 
     for (x,y,w,h) in faces:
         img = cv2.rectangle(img, (x,y),(x+w,y+h),(255,0,0),2)
@@ -26,7 +27,7 @@ def detect_and_draw(img, gray):
             if(cnt_eye == max_eyes):
                 break;
 
-            #change dimentionas
+            #change dimensions
             ex = int(ex + (ew/6))
             ew = int(ew - (ew/6))
             ey = int(ey + (eh/3))
